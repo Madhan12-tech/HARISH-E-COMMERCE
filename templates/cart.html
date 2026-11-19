@@ -1,0 +1,195 @@
+
+{% extends "base.html" %}
+
+{% block title %}Shopping Cart | HARISH{% endblock %}
+
+{% block content %}
+
+<section class="cart-page">
+
+    <div class="cart-hero">
+        <div>
+            <span class="section-eyebrow">YOUR SHOPPING BAG</span>
+            <h1>Shopping <span>Cart</span></h1>
+            <p>Your selected products are waiting for you.</p>
+        </div>
+
+        <div class="cart-hero-icon">🛒</div>
+    </div>
+
+    <div class="cart-layout">
+
+        <div class="cart-items-panel">
+
+            <div class="cart-panel-heading">
+                <h2>Your Items</h2>
+                <span>{{ cart_items|length }} item(s)</span>
+            </div>
+
+            {% if cart_items %}
+
+                {% for item in cart_items %}
+                <article class="cart-item">
+
+                    <div class="cart-product-image">
+                        {% if item.product.image %}
+                            <img src="{{ url_for('static', filename='uploads/' ~ item.product.image) }}"
+                                 alt="{{ item.product.name }}">
+                        {% else %}
+                            <div class="cart-no-image">📦</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="cart-product-info">
+                        <span class="cart-product-label">HARISH COLLECTION</span>
+
+                        <h3>
+                            <a href="{{ url_for('main.product_detail', slug=item.product.slug) }}">
+                                {{ item.product.name }}
+                            </a>
+                        </h3>
+
+                        <p class="cart-product-price">
+                            ₹{{ "%.2f"|format(item.product.price) }}
+                        </p>
+
+                        {% if item.product.stock > 0 %}
+                            <span class="cart-stock-status">
+                                <span></span> In Stock
+                            </span>
+                        {% else %}
+                            <span class="cart-out-stock">Out of Stock</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="cart-quantity">
+                        <form method="POST"
+                              action="{{ url_for('cart.update_cart', item_id=item.id) }}"
+                              class="quantity-form">
+
+                            <label for="quantity-{{ item.id }}">Qty</label>
+
+                            <div class="quantity-control">
+                                <input type="number"
+                                       id="quantity-{{ item.id }}"
+                                       name="quantity"
+                                       value="{{ item.quantity }}"
+                                       min="1"
+                                       max="{{ item.product.stock }}"
+                                       {% if item.product.stock < 1 %}disabled{% endif %}
+                                       required>
+
+                                <button type="submit" aria-label="Update quantity">
+                                    ↻
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="cart-item-total">
+                        <span>Item Total</span>
+                        <strong>₹{{ "%.2f"|format(item.subtotal) }}</strong>
+                    </div>
+
+                    <form method="POST"
+                          action="{{ url_for('cart.remove_from_cart', item_id=item.id) }}"
+                          class="cart-remove-form"
+                          onsubmit="return confirm('Remove this product from your cart?');">
+
+                        <button type="submit" class="cart-remove-btn"
+                                title="Remove item">
+                            ✕
+                        </button>
+                    </form>
+
+                </article>
+                {% endfor %}
+
+                <div class="cart-bottom-actions">
+                    <a href="{{ url_for('main.products') }}" class="continue-shopping">
+                        ← Continue Shopping
+                    </a>
+
+                    <form method="POST"
+                          action="{{ url_for('cart.clear_cart') }}"
+                          onsubmit="return confirm('Are you sure you want to clear your cart?');">
+
+                        <button type="submit" class="clear-cart-btn">
+                            Clear Cart
+                        </button>
+                    </form>
+                </div>
+
+            {% else %}
+
+                <div class="empty-cart">
+                    <div class="empty-cart-icon">🛍️</div>
+                    <h2>Your cart is empty</h2>
+                    <p>Looks like you haven't added anything yet.</p>
+
+                    <a href="{{ url_for('main.products') }}"
+                       class="auth-submit-btn empty-cart-btn">
+                        Explore Products <span>→</span>
+                    </a>
+                </div>
+
+            {% endif %}
+
+        </div>
+
+        {% if cart_items %}
+        <aside class="cart-summary-panel">
+
+            <span class="section-eyebrow">ORDER SUMMARY</span>
+            <h2>Cart Summary</h2>
+
+            <div class="summary-row">
+                <span>Subtotal</span>
+                <strong>₹{{ "%.2f"|format(total) }}</strong>
+            </div>
+
+            <div class="summary-row">
+                <span>Delivery</span>
+                <strong class="delivery-free">Calculated at checkout</strong>
+            </div>
+
+            <div class="summary-divider"></div>
+
+            <div class="summary-total">
+                <span>Estimated Total</span>
+                <strong>₹{{ "%.2f"|format(total) }}</strong>
+            </div>
+
+            <p class="summary-note">
+                Final delivery charges and order details will be shown at checkout.
+            </p>
+
+            <a href="{{ url_for('order.checkout') }}" class="checkout-btn">
+                Proceed to Checkout <span>→</span>
+            </a>
+
+            <div class="cart-security">
+                <span>🔒</span>
+                <div>
+                    <strong>Secure Checkout</strong>
+                    <small>Your shopping experience matters to us.</small>
+                </div>
+            </div>
+
+            <div class="cart-payment-methods">
+                <span>PAYMENT OPTIONS</span>
+                <div>
+                    <span>COD</span>
+                    <span>UPI</span>
+                    <span>Cards</span>
+                </div>
+            </div>
+
+        </aside>
+        {% endif %}
+
+    </div>
+
+</section>
+
+{% endblock %}
