@@ -1,0 +1,186 @@
+
+{% extends "base.html" %}
+
+{% block title %}Create Account | HARISH{% endblock %}
+
+{% block content %}
+
+<section class="auth-section register-section">
+    <div class="auth-decoration auth-decoration-one"></div>
+    <div class="auth-decoration auth-decoration-two"></div>
+
+    <div class="auth-container register-container">
+
+        <div class="auth-visual">
+            <div class="auth-visual-content">
+                <span class="auth-eyebrow">WELCOME TO HARISH</span>
+
+                <h1>Your world of shopping starts <span>here.</span></h1>
+
+                <p>
+                    Create your account and enjoy a smarter, simpler
+                    and more exciting shopping experience.
+                </p>
+
+                <div class="register-benefits">
+                    <div class="benefit-item">
+                        <span class="benefit-icon">✦</span>
+                        <div>
+                            <strong>Easy Shopping</strong>
+                            <small>Discover products in one place.</small>
+                        </div>
+                    </div>
+
+                    <div class="benefit-item">
+                        <span class="benefit-icon">✓</span>
+                        <div>
+                            <strong>Secure Account</strong>
+                            <small>Your account is protected.</small>
+                        </div>
+                    </div>
+
+                    <div class="benefit-item">
+                        <span class="benefit-icon">➜</span>
+                        <div>
+                            <strong>Track Orders</strong>
+                            <small>Keep track of your purchases.</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="auth-floating-shape shape-one">H</div>
+                <div class="auth-floating-shape shape-two">✦</div>
+            </div>
+        </div>
+
+        <div class="auth-form-panel">
+            <div class="auth-form-header">
+                <span class="auth-logo-mark">H</span>
+                <span class="auth-brand-name">HARISH</span>
+
+                <h2>Create Account</h2>
+                <p>Join us and start shopping today.</p>
+            </div>
+
+            <form method="POST" action="{{ url_for('auth.register') }}"
+                  class="auth-form register-form">
+
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">👤</span>
+                        <input type="text" id="name" name="name"
+                               placeholder="Enter your full name"
+                               autocomplete="name" required
+                               value="{{ request.form.get('name', '') }}">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">✉</span>
+                        <input type="email" id="email" name="email"
+                               placeholder="example@email.com"
+                               autocomplete="email" required
+                               value="{{ request.form.get('email', '') }}">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Mobile Number</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">☎</span>
+                        <input type="tel" id="phone" name="phone"
+                               placeholder="Enter mobile number"
+                               autocomplete="tel"
+                               pattern="[0-9]{10}"
+                               maxlength="10" required
+                               value="{{ request.form.get('phone', '') }}">
+                    </div>
+                    <small class="field-hint">Enter your 10-digit mobile number.</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Create Password</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">🔒</span>
+                        <input type="password" id="password" name="password"
+                               placeholder="Create a strong password"
+                               autocomplete="new-password"
+                               minlength="8" required>
+                        <button type="button" class="password-toggle"
+                                onclick="toggleRegisterPassword('password', this)"
+                                aria-label="Show password">Show</button>
+                    </div>
+                    <small class="field-hint">Use at least 8 characters.</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirm_password">Confirm Password</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">🔐</span>
+                        <input type="password" id="confirm_password"
+                               name="confirm_password"
+                               placeholder="Enter password again"
+                               autocomplete="new-password"
+                               minlength="8" required>
+                        <button type="button" class="password-toggle"
+                                onclick="toggleRegisterPassword('confirm_password', this)"
+                                aria-label="Show password">Show</button>
+                    </div>
+                </div>
+
+                <label class="terms-check">
+                    <input type="checkbox" required>
+                    <span>I agree to the terms and privacy policy.</span>
+                </label>
+
+                <button type="submit" class="auth-submit-btn">
+                    <span>Create My Account</span>
+                    <span class="submit-arrow">→</span>
+                </button>
+
+            </form>
+
+            <div class="auth-divider">
+                <span>ALREADY A MEMBER?</span>
+            </div>
+
+            <p class="auth-switch">
+                Already have an account?
+                <a href="{{ url_for('auth.login') }}">Sign In</a>
+            </p>
+
+            <a href="{{ url_for('main.home') }}" class="back-home-link">
+                ← Back to HARISH Store
+            </a>
+        </div>
+    </div>
+</section>
+
+<script>
+function toggleRegisterPassword(fieldId, button) {
+    const field = document.getElementById(fieldId);
+
+    if (field.type === "password") {
+        field.type = "text";
+        button.textContent = "Hide";
+    } else {
+        field.type = "password";
+        button.textContent = "Show";
+    }
+}
+
+document.querySelector(".register-form").addEventListener("submit", function(e) {
+    const password = document.getElementById("password").value;
+    const confirmPassword = document.getElementById("confirm_password").value;
+
+    if (password !== confirmPassword) {
+        e.preventDefault();
+        alert("Passwords do not match. Please try again.");
+    }
+});
+</script>
+
+{% endblock %}
