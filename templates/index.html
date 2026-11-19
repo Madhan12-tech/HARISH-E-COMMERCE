@@ -1,0 +1,505 @@
+
+{% extends "base.html" %}
+
+{% block title %}HARISH | Shop Everything. Enjoy More.{% endblock %}
+
+{% block content %}
+
+<!-- ======================================
+     HERO SECTION
+====================================== -->
+
+<section class="hero-section">
+
+    <div class="hero-grid-bg"></div>
+
+    <div class="hero-content">
+
+        <div class="hero-badge">
+            <span class="pulse-dot"></span>
+            YOUR NEW SHOPPING DESTINATION
+        </div>
+
+        <h1>
+            SHOP EVERYTHING.
+            <span class="gradient-text">ENJOY MORE.</span>
+        </h1>
+
+        <p class="hero-description">
+            Discover products you'll love. Explore more choices,
+            enjoy great shopping and find everything in one place.
+        </p>
+
+        <div class="hero-buttons">
+
+            <a href="{{ url_for('main.products') }}" class="btn-primary">
+                Explore Collection
+                <i class="fa-solid fa-arrow-right"></i>
+            </a>
+
+            <a href="#featured-products" class="btn-secondary">
+                Discover More
+                <i class="fa-solid fa-play"></i>
+            </a>
+
+        </div>
+
+        <div class="hero-trust">
+
+            <div class="trust-item">
+                <i class="fa-solid fa-bag-shopping"></i>
+                <span>Easy Shopping</span>
+            </div>
+
+            <div class="trust-item">
+                <i class="fa-solid fa-shield-halved"></i>
+                <span>Secure Checkout</span>
+            </div>
+
+            <div class="trust-item">
+                <i class="fa-solid fa-truck-fast"></i>
+                <span>Order Delivery</span>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- 3D PRODUCT VISUAL -->
+
+    <div class="hero-visual">
+
+        <div class="hero-orbit orbit-one"></div>
+        <div class="hero-orbit orbit-two"></div>
+
+        <div class="hero-floating-card floating-card-one">
+            <i class="fa-solid fa-bolt"></i>
+            <div>
+                <strong>Explore</strong>
+                <small>New Arrivals</small>
+            </div>
+        </div>
+
+        <div class="hero-product-stage" id="heroProductStage">
+
+            <div class="hero-glow"></div>
+
+            <div class="hero-product-image">
+                <img
+                    src="https://images.unsplash.com/photo-1491553895911-0055eca6402d?auto=format&fit=crop&w=900&q=85"
+                    alt="Premium shopping collection"
+                >
+            </div>
+
+            <div class="hero-product-label">
+                <span>THE HARISH COLLECTION</span>
+                <strong>Discover Your Style.</strong>
+            </div>
+
+        </div>
+
+        <div class="hero-floating-card floating-card-two">
+            <i class="fa-solid fa-star"></i>
+            <div>
+                <strong>Shop Smart</strong>
+                <small>Live Better</small>
+            </div>
+        </div>
+
+        <div class="hero-small-circle circle-one"></div>
+        <div class="hero-small-circle circle-two"></div>
+
+    </div>
+
+    <div class="hero-bottom-label">
+        <span>01 / 04</span>
+        <span>SCROLL TO EXPLORE</span>
+        <i class="fa-solid fa-arrow-down"></i>
+    </div>
+
+</section>
+
+
+<!-- ======================================
+     FEATURES STRIP
+====================================== -->
+
+<section class="features-strip">
+
+    <div class="feature-item">
+        <i class="fa-solid fa-truck-fast"></i>
+        <div>
+            <strong>Delivery Service</strong>
+            <span>Convenient ordering</span>
+        </div>
+    </div>
+
+    <div class="feature-item">
+        <i class="fa-solid fa-lock"></i>
+        <div>
+            <strong>Secure Payments</strong>
+            <span>Protected checkout</span>
+        </div>
+    </div>
+
+    <div class="feature-item">
+        <i class="fa-solid fa-tags"></i>
+        <div>
+            <strong>Great Choices</strong>
+            <span>Explore more products</span>
+        </div>
+    </div>
+
+    <div class="feature-item">
+        <i class="fa-solid fa-headset"></i>
+        <div>
+            <strong>Customer Support</strong>
+            <span>We're here to help</span>
+        </div>
+    </div>
+
+</section>
+
+
+<!-- ======================================
+     CATEGORY SECTION
+====================================== -->
+
+<section class="section-container category-section">
+
+    <div class="section-heading">
+
+        <div>
+            <span class="section-eyebrow">EXPLORE OUR STORE</span>
+            <h2>Shop By <span class="gradient-text">Category.</span></h2>
+            <p>Find something special in every collection.</p>
+        </div>
+
+        <a href="{{ url_for('main.products') }}" class="text-link">
+            View All Products
+            <i class="fa-solid fa-arrow-right"></i>
+        </a>
+
+    </div>
+
+    <div class="category-grid">
+
+        {% for category in categories %}
+
+        <a href="{{ url_for('main.category', slug=category.slug) }}"
+           class="category-card">
+
+            <div class="category-image">
+
+                {% if category.image %}
+                <img
+                    src="{{ url_for('static', filename='uploads/' + category.image) }}"
+                    alt="{{ category.name }}"
+                    loading="lazy"
+                >
+                {% else %}
+                <div class="category-placeholder">
+                    <i class="fa-solid fa-layer-group"></i>
+                </div>
+                {% endif %}
+
+                <div class="category-overlay"></div>
+
+                <span class="category-arrow">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </span>
+
+            </div>
+
+            <div class="category-info">
+                <h3>{{ category.name }}</h3>
+                <span>Explore Collection</span>
+            </div>
+
+        </a>
+
+        {% else %}
+
+        <div class="empty-category">
+            <i class="fa-solid fa-box-open"></i>
+            <h3>Collections Coming Soon</h3>
+            <p>Our product categories will appear here.</p>
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+
+<!-- ======================================
+     FEATURED PRODUCTS
+====================================== -->
+
+<section class="section-container featured-section" id="featured-products">
+
+    <div class="section-heading">
+
+        <div>
+            <span class="section-eyebrow">HANDPICKED FOR YOU</span>
+            <h2>Featured <span class="gradient-text">Products.</span></h2>
+            <p>Explore some of our popular shopping picks.</p>
+        </div>
+
+        <a href="{{ url_for('main.products') }}" class="text-link">
+            Shop All
+            <i class="fa-solid fa-arrow-right"></i>
+        </a>
+
+    </div>
+
+    <div class="product-grid">
+
+        {% for product in featured_products %}
+
+        <article class="product-card">
+
+            <div class="product-image-wrapper">
+
+                {% if product.old_price and product.old_price > product.price %}
+                <span class="product-sale-badge">
+                    SALE
+                </span>
+                {% endif %}
+
+                <a href="{{ url_for('main.product_detail', slug=product.slug) }}">
+
+                    {% if product.image %}
+                    <img
+                        src="{{ url_for('static', filename='uploads/' + product.image) }}"
+                        alt="{{ product.name }}"
+                        loading="lazy"
+                    >
+                    {% else %}
+                    <div class="product-placeholder">
+                        <i class="fa-solid fa-image"></i>
+                        <span>Product Image</span>
+                    </div>
+                    {% endif %}
+
+                </a>
+
+                <div class="product-quick-actions">
+
+                    <a href="{{ url_for('main.product_detail', slug=product.slug) }}"
+                       aria-label="View product">
+                        <i class="fa-solid fa-eye"></i>
+                    </a>
+
+                    <form action="{{ url_for('cart.add_to_cart', product_id=product.id) }}"
+                          method="POST">
+                        <button type="submit" aria-label="Add to cart">
+                            <i class="fa-solid fa-bag-shopping"></i>
+                        </button>
+                    </form>
+
+                </div>
+
+            </div>
+
+            <div class="product-information">
+
+                <span class="product-category">
+                    {{ product.category.name if product.category else 'HARISH COLLECTION' }}
+                </span>
+
+                <h3>
+                    <a href="{{ url_for('main.product_detail', slug=product.slug) }}">
+                        {{ product.name }}
+                    </a>
+                </h3>
+
+                <div class="product-price">
+
+                    <strong>₹{{ "%.2f"|format(product.price) }}</strong>
+
+                    {% if product.old_price and product.old_price > product.price %}
+                    <del>₹{{ "%.2f"|format(product.old_price) }}</del>
+                    {% endif %}
+
+                </div>
+
+                {% if product.stock > 0 %}
+                <span class="stock-status available">
+                    <i class="fa-solid fa-circle-check"></i> In Stock
+                </span>
+                {% else %}
+                <span class="stock-status unavailable">
+                    Out of Stock
+                </span>
+                {% endif %}
+
+            </div>
+
+        </article>
+
+        {% else %}
+
+        <div class="empty-products">
+            <i class="fa-solid fa-bag-shopping"></i>
+            <h3>Products Coming Soon</h3>
+            <p>Our exciting collection will be available here shortly.</p>
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+
+<!-- ======================================
+     PROMOTIONAL BANNER
+====================================== -->
+
+<section class="promo-section">
+
+    <div class="promo-content">
+
+        <span class="section-eyebrow">A BETTER WAY TO SHOP</span>
+
+        <h2>
+            More Choices.
+            <span>More Possibilities.</span>
+        </h2>
+
+        <p>
+            Discover your next favourite product.
+            Make every shopping experience special with HARISH.
+        </p>
+
+        <a href="{{ url_for('main.products') }}" class="btn-light">
+            Start Shopping
+            <i class="fa-solid fa-arrow-right"></i>
+        </a>
+
+    </div>
+
+    <div class="promo-decoration">
+        <div class="promo-ring ring-one"></div>
+        <div class="promo-ring ring-two"></div>
+        <div class="promo-center-icon">
+            <i class="fa-solid fa-gift"></i>
+        </div>
+    </div>
+
+</section>
+
+
+<!-- ======================================
+     WHY CHOOSE HARISH
+====================================== -->
+
+<section class="section-container why-section">
+
+    <div class="section-heading centered-heading">
+
+        <span class="section-eyebrow">THE HARISH EXPERIENCE</span>
+
+        <h2>Shopping Made <span class="gradient-text">Better.</span></h2>
+
+        <p>A simple, convenient way to discover and order products.</p>
+
+    </div>
+
+    <div class="why-grid">
+
+        <div class="why-card">
+            <div class="why-icon icon-orange">
+                <i class="fa-solid fa-cubes-stacked"></i>
+            </div>
+            <h3>Wide Selection</h3>
+            <p>Explore different products across our growing collections.</p>
+        </div>
+
+        <div class="why-card">
+            <div class="why-icon icon-purple">
+                <i class="fa-solid fa-credit-card"></i>
+            </div>
+            <h3>Easy Payments</h3>
+            <p>Choose from available payment options during checkout.</p>
+        </div>
+
+        <div class="why-card">
+            <div class="why-icon icon-blue">
+                <i class="fa-solid fa-truck-fast"></i>
+            </div>
+            <h3>Convenient Delivery</h3>
+            <p>Place your order online and follow its progress.</p>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ======================================
+     NEWSLETTER / FINAL CTA
+====================================== -->
+
+<section class="final-cta-section">
+
+    <div class="final-cta-content">
+
+        <span class="section-eyebrow">YOUR SHOPPING JOURNEY STARTS HERE</span>
+
+        <h2>Ready to Discover <span class="gradient-text">More?</span></h2>
+
+        <p>
+            Explore the HARISH collection and find products
+            that make your everyday life better.
+        </p>
+
+        <a href="{{ url_for('main.products') }}" class="btn-primary">
+            Explore Now
+            <i class="fa-solid fa-arrow-right"></i>
+        </a>
+
+    </div>
+
+</section>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const heroStage = document.getElementById("heroProductStage");
+
+    if (heroStage && window.matchMedia("(pointer: fine)").matches) {
+
+        heroStage.addEventListener("mousemove", function (event) {
+
+            const rect = heroStage.getBoundingClientRect();
+
+            const x = (event.clientX - rect.left) / rect.width;
+            const y = (event.clientY - rect.top) / rect.height;
+
+            const rotateY = (x - 0.5) * 18;
+            const rotateX = (0.5 - y) * 18;
+
+            heroStage.style.transform =
+                `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+
+        });
+
+        heroStage.addEventListener("mouseleave", function () {
+            heroStage.style.transform =
+                "perspective(1000px) rotateX(0deg) rotateY(0deg)";
+        });
+
+    }
+
+});
+</script>
+
+{% endblock %}
