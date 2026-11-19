@@ -1,0 +1,323 @@
+
+{% extends "base.html" %}
+
+{% block title %}Shop All Products | HARISH{% endblock %}
+
+{% block content %}
+
+<!-- PAGE HERO -->
+<section class="catalog-hero">
+
+    <div class="catalog-hero-content">
+        <span class="section-eyebrow">THE HARISH COLLECTION</span>
+
+        <h1>Explore Our <span class="gradient-text">Products.</span></h1>
+
+        <p>
+            Discover more choices. Find your favourites.
+            Shop everything in one place.
+        </p>
+
+        <div class="catalog-breadcrumb">
+            <a href="{{ url_for('main.home') }}">Home</a>
+            <i class="fa-solid fa-chevron-right"></i>
+            <span>Shop</span>
+        </div>
+    </div>
+
+    <div class="catalog-decoration">
+        <div class="catalog-orbit"></div>
+        <i class="fa-solid fa-bag-shopping"></i>
+    </div>
+
+</section>
+
+
+<!-- PRODUCT CATALOGUE -->
+<section class="section-container catalogue-section">
+
+    <div class="catalogue-topbar">
+
+        <div class="catalogue-count">
+            <h2>All Products</h2>
+            <span>Discover your next favourite</span>
+        </div>
+
+        <form action="{{ url_for('main.products') }}" method="GET"
+              class="catalogue-search">
+
+            <i class="fa-solid fa-magnifying-glass"></i>
+
+            <input
+                type="search"
+                name="q"
+                placeholder="Search products..."
+                value="{{ request.args.get('q', '') }}"
+            >
+
+            <button type="submit">Search</button>
+
+        </form>
+
+    </div>
+
+
+    <div class="catalogue-layout">
+
+        <!-- SIDEBAR FILTER -->
+        <aside class="catalogue-sidebar">
+
+            <div class="filter-heading">
+                <h3><i class="fa-solid fa-sliders"></i> Filters</h3>
+
+                <a href="{{ url_for('main.products') }}">Reset</a>
+            </div>
+
+            <form action="{{ url_for('main.products') }}" method="GET">
+
+                <input
+                    type="hidden"
+                    name="q"
+                    value="{{ request.args.get('q', '') }}"
+                >
+
+                <div class="filter-group">
+
+                    <h4>Categories</h4>
+
+                    <label class="filter-option">
+                        <input
+                            type="radio"
+                            name="category"
+                            value=""
+                            {% if not selected_category %}checked{% endif %}
+                        >
+                        <span>All Categories</span>
+                    </label>
+
+                    {% for category in categories %}
+
+                    <label class="filter-option">
+
+                        <input
+                            type="radio"
+                            name="category"
+                            value="{{ category.slug }}"
+                            {% if selected_category == category.slug %}checked{% endif %}
+                        >
+
+                        <span>{{ category.name }}</span>
+
+                    </label>
+
+                    {% endfor %}
+
+                </div>
+
+
+                <div class="filter-group">
+
+                    <h4>Availability</h4>
+
+                    <label class="filter-option">
+                        <input
+                            type="checkbox"
+                            name="in_stock"
+                            value="1"
+                            {% if request.args.get('in_stock') == '1' %}checked{% endif %}
+                        >
+                        <span>In Stock Only</span>
+                    </label>
+
+                </div>
+
+
+                <div class="filter-group">
+
+                    <h4>Sort By</h4>
+
+                    <select name="sort" class="filter-select">
+
+                        <option value="newest"
+                            {% if request.args.get('sort', 'newest') == 'newest' %}selected{% endif %}>
+                            Newest First
+                        </option>
+
+                        <option value="price_low"
+                            {% if request.args.get('sort') == 'price_low' %}selected{% endif %}>
+                            Price: Low to High
+                        </option>
+
+                        <option value="price_high"
+                            {% if request.args.get('sort') == 'price_high' %}selected{% endif %}>
+                            Price: High to Low
+                        </option>
+
+                        <option value="name"
+                            {% if request.args.get('sort') == 'name' %}selected{% endif %}>
+                            Name: A to Z
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <button type="submit" class="filter-submit">
+                    Apply Filters
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+
+            </form>
+
+        </aside>
+
+
+        <!-- PRODUCT AREA -->
+        <div class="catalogue-main">
+
+            <div class="catalogue-results-bar">
+
+                <p>
+                    Showing
+                    <strong>{{ products|length }}</strong>
+                    products
+                </p>
+
+                <span>
+                    <i class="fa-solid fa-grid-2"></i>
+                    HARISH COLLECTION
+                </span>
+
+            </div>
+
+
+            <div class="product-grid catalogue-product-grid">
+
+                {% for product in products %}
+
+                <article class="product-card">
+
+                    <div class="product-image-wrapper">
+
+                        {% if product.old_price and product.old_price > product.price %}
+                        <span class="product-sale-badge">SPECIAL PRICE</span>
+                        {% endif %}
+
+                        <a href="{{ url_for('main.product_detail', slug=product.slug) }}">
+
+                            {% if product.image %}
+
+                            <img
+                                src="{{ url_for('static', filename='uploads/' + product.image) }}"
+                                alt="{{ product.name }}"
+                                loading="lazy"
+                            >
+
+                            {% else %}
+
+                            <div class="product-placeholder">
+                                <i class="fa-solid fa-image"></i>
+                                <span>Product Image</span>
+                            </div>
+
+                            {% endif %}
+
+                        </a>
+
+                        <div class="product-quick-actions">
+
+                            <a href="{{ url_for('main.product_detail', slug=product.slug) }}"
+                               aria-label="View product">
+                                <i class="fa-solid fa-eye"></i>
+                            </a>
+
+                            {% if product.stock > 0 %}
+
+                            <form action="{{ url_for('cart.add_to_cart', product_id=product.id) }}"
+                                  method="POST">
+
+                                <button type="submit" aria-label="Add to cart">
+                                    <i class="fa-solid fa-bag-shopping"></i>
+                                </button>
+
+                            </form>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="product-information">
+
+                        <span class="product-category">
+                            {{ product.category.name if product.category else 'HARISH COLLECTION' }}
+                        </span>
+
+                        <h3>
+                            <a href="{{ url_for('main.product_detail', slug=product.slug) }}">
+                                {{ product.name }}
+                            </a>
+                        </h3>
+
+                        <div class="product-price">
+
+                            <strong>₹{{ "%.2f"|format(product.price) }}</strong>
+
+                            {% if product.old_price and product.old_price > product.price %}
+                            <del>₹{{ "%.2f"|format(product.old_price) }}</del>
+                            {% endif %}
+
+                        </div>
+
+                        {% if product.stock > 0 %}
+
+                        <span class="stock-status available">
+                            <i class="fa-solid fa-circle-check"></i>
+                            In Stock
+                        </span>
+
+                        {% else %}
+
+                        <span class="stock-status unavailable">
+                            <i class="fa-solid fa-circle-xmark"></i>
+                            Out of Stock
+                        </span>
+
+                        {% endif %}
+
+                    </div>
+
+                </article>
+
+                {% else %}
+
+                <div class="empty-products catalogue-empty">
+
+                    <i class="fa-solid fa-magnifying-glass"></i>
+
+                    <h3>No Products Found</h3>
+
+                    <p>
+                        We couldn't find products matching your selection.
+                        Try another search or category.
+                    </p>
+
+                    <a href="{{ url_for('main.products') }}" class="btn-primary">
+                        View All Products
+                    </a>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
