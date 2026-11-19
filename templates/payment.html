@@ -1,0 +1,156 @@
+
+{% extends "base.html" %}
+
+{% block title %}Secure Payment | HARISH{% endblock %}
+
+{% block content %}
+
+<section class="payment-page">
+
+    <div class="payment-container">
+
+        <div class="payment-brand">
+            <span class="auth-logo-mark">H</span>
+            <span>HARISH</span>
+        </div>
+
+        <div class="payment-success-icon">
+            <span>🔒</span>
+        </div>
+
+        <span class="section-eyebrow">SECURE CHECKOUT</span>
+        <h1>Complete Your <span>Payment</span></h1>
+        <p class="payment-description">
+            You're one step away from completing your purchase.
+        </p>
+
+        <div class="payment-order-card">
+
+            <div class="payment-order-heading">
+                <span>ORDER DETAILS</span>
+                <span class="payment-pending">PAYMENT PENDING</span>
+            </div>
+
+            <div class="payment-detail-row">
+                <span>Order Number</span>
+                <strong>{{ order.order_number }}</strong>
+            </div>
+
+            <div class="payment-detail-row">
+                <span>Payment Method</span>
+                <strong>Razorpay Online Payment</strong>
+            </div>
+
+            <div class="payment-detail-row">
+                <span>Order Date</span>
+                <strong>{{ order.created_at.strftime('%d %b %Y') }}</strong>
+            </div>
+
+            <div class="payment-total-row">
+                <span>Amount to Pay</span>
+                <strong>₹{{ "%.2f"|format(order.total_amount) }}</strong>
+            </div>
+
+        </div>
+
+        <button type="button" id="payNowButton" class="payment-now-btn">
+            <span>Pay Securely Now</span>
+            <span>→</span>
+        </button>
+
+        <p class="payment-secure-text">
+            <span>🔐</span>
+            Secure payment powered by Razorpay.
+        </p>
+
+        <a href="{{ url_for('order.my_orders') }}" class="payment-back-link">
+            ← Back to My Orders
+        </a>
+
+    </div>
+
+</section>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const payButton = document.getElementById("payNowButton");
+
+    payButton.addEventListener("click", function () {
+
+        if (typeof Razorpay === "undefined") {
+            alert("Payment service is currently unavailable. Please try again.");
+            return;
+        }
+
+        payButton.disabled = true;
+        payButton.innerHTML = "Opening Secure Checkout...";
+
+        const options = {
+            key: {{ razorpay_key_id|tojson }},
+            amount: {{ razorpay_order.amount|int }},
+            currency: {{ razorpay_order.currency|tojson }},
+            name: "HARISH",
+            description: "Order {{ order.order_number }}",
+            order_id: {{ razorpay_order.id|tojson }},
+
+            handler: function (response) {
+
+                const form = document.createElement("form");
+                form.method = "POST";
+                form.action = "{{ url_for('payment.verify_payment') }}";
+
+                const fields = {
+                    razorpay_payment_id: response.razorpay_payment_id,
+                    razorpay_order_id: response.razorpay_order_id,
+                    razorpay_signature: response.razorpay_signature
+                };
+
+                Object.keys(fields).forEach(function (key) {
+                    const input = document.createElement("input");
+                    input.type = "hidden";
+                    input.name = key;
+                    input.value = fields[key];
+                    form.appendChild(input);
+                });
+
+                document.body.appendChild(form);
+                form.submit();
+            },
+
+            modal: {
+                ondismiss: function () {
+                    payButton.disabled = false;
+                    payButton.innerHTML = "Pay Securely Now →";
+                }
+            },
+
+            theme: {
+                color: "#6c45ff"
+            }
+        };
+
+        try {
+            const razorpay = new Razorpay(options);
+
+            razorpay.on("payment.failed", function () {
+                payButton.disabled = false;
+                payButton.innerHTML = "Pay Securely Now →";
+                alert("Payment was not completed. You can try again.");
+            });
+
+            razorpay.open();
+
+        } catch (error) {
+            payButton.disabled = false;
+            payButton.innerHTML = "Pay Securely Now →";
+            alert("Unable to open payment checkout. Please try again.");
+        }
+    });
+
+});
+</script>
+
+{% endblock %}
