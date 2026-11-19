@@ -6,13 +6,14 @@ load_dotenv()
 
 
 class Config:
-    # Website settings
+
+    # Security
     SECRET_KEY = os.getenv(
         "SECRET_KEY",
-        "harish-development-secret-change-before-deployment"
+        "change-this-secret-before-deployment"
     )
 
-    # Database settings
+    # Database
     SQLALCHEMY_DATABASE_URI = os.getenv(
         "DATABASE_URL",
         "sqlite:///harish.db"
@@ -20,33 +21,42 @@ class Config:
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
-    # Image upload settings
+    # Image uploads
     MAX_CONTENT_LENGTH = 10 * 1024 * 1024
 
     UPLOAD_FOLDER = os.path.join(
-        "static",
-        "uploads"
+        "static", "uploads"
     )
 
     ALLOWED_EXTENSIONS = {
-        "png",
-        "jpg",
-        "jpeg",
-        "webp"
+        "png", "jpg", "jpeg", "webp"
     }
 
-    # Razorpay payment settings
+    # Store branding
+    STORE_NAME = "HARISH"
+    STORE_TAGLINE = "SHOP EVERYTHING. ENJOY MORE."
+
+    # Owner information
+    OWNER_NAME = "Arish Kumar.G"
+    OWNER_ROLE = "Founder & Owner"
+
+    OWNER_VILLAGE = "Naranikuppam"
+    OWNER_POST = "Kodipalli"
+    OWNER_DISTRICT = "Krishnagiri"
+
+    OWNER_PHONE = "9080836701"
+    OWNER_EMAIL = "arishkumar6732@gmail.com"
+
+    OWNER_IMAGE = "images/owner.jpg"
+
+    # Currency
+    STORE_CURRENCY = "INR"
+
+    # Razorpay
     RAZORPAY_KEY_ID = os.getenv(
-        "RAZORPAY_KEY_ID",
-        ""
+        "RAZORPAY_KEY_ID", ""
     )
 
     RAZORPAY_KEY_SECRET = os.getenv(
-        "RAZORPAY_KEY_SECRET",
-        ""
+        "RAZORPAY_KEY_SECRET", ""
     )
-
-    # Store information
-    STORE_NAME = "HARISH"
-    STORE_TAGLINE = "SHOP EVERYTHING. ENJOY MORE."
-    STORE_CURRENCY = "INR"
